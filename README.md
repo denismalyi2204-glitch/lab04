@@ -10,3 +10,4 @@
 
 ## Сборка
 (инструкции по сборке будут добавлены позже)
+[![CI Status](https://github.com/denismalyi2204/lab04/actions/workflows/ci.yml/badge.svg)](https://github.com/denismalyi2204/lab04/actions/workflows/ci.yml)
