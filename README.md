@@ -19,3 +19,21 @@
 ### Build Matrix
 - **gcc** - Ubuntu latest
 - **clang** - Ubuntu latest
+
+## CI Status
+
+[![CI](https://github.com/denismalyi2204-glitch/lab04/actions/workflows/ci.yml/badge.svg)](https://github.com/denismalyi2204-glitch/lab04/actions/workflows/ci.yml)
+
+### Build Matrix
+- **gcc** - Ubuntu latest
+- **clang** - Ubuntu latest
+
+## Build Instructions
+
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build .
+./example1
+./example2
+```

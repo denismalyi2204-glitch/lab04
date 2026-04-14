@@ -1,5 +1,6 @@
 build/
 _build/
+_install/
 *.o
 *.a
 *.so
@@ -7,3 +8,4 @@ _build/
 .DS_Store
 .vscode/
 .idea/
+log.txt
