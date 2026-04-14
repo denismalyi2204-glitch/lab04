@@ -11,3 +11,11 @@
 ## Сборка
 (инструкции по сборке будут добавлены позже)
 [![CI Status](https://github.com/denismalyi2204/lab04/actions/workflows/ci.yml/badge.svg)](https://github.com/denismalyi2204/lab04/actions/workflows/ci.yml)
+
+## CI Status
+
+[![CI](https://github.com/denismalyi2204-glitch/lab04/actions/workflows/ci.yml/badge.svg)](https://github.com/denismalyi2204-glitch/lab04/actions/workflows/ci.yml)
+
+### Build Matrix
+- **gcc** - Ubuntu latest
+- **clang** - Ubuntu latest
