@@ -165,3 +165,122 @@ View this run on GitHub: https://github.com/denismalyi2204-glitch/lab04/actions/
 ```
 
 Авторизуемся в GitHub CLI и проверяем, что все команды работают корректно
+
+## Homework
+```sh
+export GITHUB_USERNAME="****"
+cd ~/denismalyi2204/workspace/projects/lab04
+mkdir -p .github/workflows
+```
+Задаем окружение, создаём папку для CI настроек
+
+```
+cat > .github/workflows/ci.yml <<'EOF'
+name: CI
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          sudo apt-get install -y clang
+        fi
+    
+    - name: Set compiler
+      run: |
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          echo "CXX=g++" >> $GITHUB_ENV
+        else
+          echo "CXX=clang++" >> $GITHUB_ENV
+        fi
+    
+    - name: Configure with CMake
+      run: |
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_CXX_COMPILER=${CXX}
+    
+    - name: Build project
+      run: |
+        cd build
+        cmake --build .
+    
+    - name: Run examples
+      run: |
+        ./build/example1
+        ./build/example2
+EOF
+cat >> README.md <<EOF
+## CI Status
+[![CI](https://github.com/${GITHUB_USERNAME}/lab04/actions/workflows/ci.yml/badge.svg)](https://github.com/${GITHUB_USERNAME}/lab04/actions/workflows/ci.yml)
+EOF
+cat > .gitignore <<'EOF'
+build/
+_build/
+_install/
+*.o
+*.a
+*.so
+*.exe
+.DS_Store
+.vscode/
+.idea/
+log.txt
+EOF
+```
+Создаём конфигурацию CI, список игнорируемых файлов для git. Добавляем бейдж статуса сборки в README
+
+```sh
+cp ../lab03/CMakeLists.txt .
+cp -r ../lab03/include .
+cp -r ../lab03/sources .
+cp -r ../lab03/examples .
+git add .github/workflows/ci.yml
+git add README.md
+git add .gitignore
+git add CMakeLists.txt
+git add include/
+git add sources/
+git add examples/
+git commit -m "Add GitHub Actions CI for print library project"
+git push origin main
+gh run list
+gh run watch
+```
+Копируем файлы проекта из lab03 и добавляем их в Git, проверяем статус CI сборок
+
+```sh
+Username for 'https://github.com': denismalyi2204-glitch
+Password for 'https://denismalyi2204-glitch@github.com': 
+Enumerating objects: 21, done.
+Counting objects: 100% (21/21), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (8/8), done.
+Writing objects: 100% (11/11), 1.37 KiB | 468.00 KiB/s, done.
+Total 11 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/denismalyi2204-glitch/lab04
+   fd40988..548fbfe  main -> main
+```
+
+```sh
+STATUS  TITLE                                 WORKFLOW  BRANCH  EVENT  ID           ELAPSED  AGE                 
+✓       Add GitHub Actions CI for print l...  CI        main    push   24413917031  33s      about 1 minute ago
+✓       added CI                              CI        main    push   24412489132  23s      about 33 minutes ago
+```
+Выводы в консоль, всё выполнено успешно
