@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [ main, master ]
@@ -7,7 +6,8 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build:
+  # Linux сборка с GCC и Clang
+  build-linux:
     runs-on: ubuntu-latest
     
     strategy:
@@ -46,8 +46,23 @@ jobs:
     
     - name: Run examples
       run: |
-        echo "=== Running example1 ==="
         ./build/example1
-        echo ""
-        echo "=== Running example2 ==="
         ./build/example2
+
+  # Windows сборка
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure with CMake
+      run: cmake -H. -B_build -DCMAKE_INSTALL_PREFIX=_install
+    
+    - name: Build project
+      run: cmake --build _build --config Release
+    
+    - name: Run examples
+      run: |
+        ./_build/Release/example1.exe
+        ./_build/Release/example2.exe
