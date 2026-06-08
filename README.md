@@ -182,8 +182,10 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
 jobs:
-  build:
+  # Linux сборка с GCC и Clang
+  build-linux:
     runs-on: ubuntu-latest
     
     strategy:
@@ -224,6 +226,30 @@ jobs:
       run: |
         ./build/example1
         ./build/example2
+
+  # Windows сборка
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Configure with CMake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+      shell: cmd
+    
+    - name: Build project
+      run: cmake --build build --config Release
+      shell: cmd
+    
+    - name: Run examples
+      run: |
+        build\Release\example1.exe
+        build\Release\example2.exe
+      shell: cmd
 EOF
 cat >> README.md <<EOF
 ## CI Status
@@ -279,8 +305,11 @@ To https://github.com/denismalyi2204-glitch/lab04
 ```
 
 ```sh
-STATUS  TITLE                                 WORKFLOW  BRANCH  EVENT  ID           ELAPSED  AGE                 
-✓       Add GitHub Actions CI for print l...  CI        main    push   24413917031  33s      about 1 minute ago
-✓       added CI                              CI        main    push   24412489132  23s      about 33 minutes ago
+STATUS  TITLE           WORKFLOW  BRANCH  EVENT  ID          ELAPSED  AGE       
+✓       Fix Windows...  CI        main    push   2716477...  35s      about 2...
+✓       Update READ...  CI        main    push   2710145...  47s      about 1...
+✓       Update READ...  CI        main    push   2710139...  50s      about 1...
+✓       Add GitHub ...  CI        main    push   2463548...  29s      about 1...
+
 ```
 Выводы в консоль, всё выполнено успешно
